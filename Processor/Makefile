@@ -1,0 +1,5 @@
+all:
+	env GOOS=linux GOARCH=arm GOARM=5 go build -o processor
+
+clean:
+	rm -rf processor
