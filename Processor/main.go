@@ -46,7 +46,7 @@ func removeExcessFiles() bool {
 	if fs > FILE_LIMIT {
 		path := fmt.Sprintf("%s/%s", foldername, files[0].Name())
 		fmt.Println("Removing " + path)
-		// os.Remove(path)
+		os.Remove(path)
 		return true
 	}
 

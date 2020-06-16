@@ -26,13 +26,14 @@ func main() {
 	for {
 		timestamp := time.Now().Unix()
 
-		filename := fmt.Sprintf("%s/%d.jpg", OUTPUT_DIRECTORY, timestamp)
+		filename := fmt.Sprintf("%s/%d.tmp", OUTPUT_DIRECTORY, timestamp)
+		final_fn := fmt.Sprintf("%s/%d.jpg", OUTPUT_DIRECTORY, timestamp)
 		lock_filename := fmt.Sprintf("%s/%d.lock", OUTPUT_DIRECTORY, timestamp)
 		lock_file, err := os.Create(lock_filename)
 		if err != nil {
 			fmt.Println("Failed to create lock file")
 			panic("Failed to create lock")
-			return
+			// return
 		}
 
 		lock_file.Close()
@@ -41,9 +42,9 @@ func main() {
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "create file: %v", err)
 			panic("Failed to create file")
-			return
+			// return
 		}
-		defer f.Close()
+		// defer f.Close()
 
 		s := raspicam.NewStill()
 		errCh := make(chan error)
@@ -60,6 +61,11 @@ func main() {
 		}
 		// log.Println("Capturing image...")
 		raspicam.Capture(s, f, errCh)
+		f.Close()
+
+		os.Rename(filename, final_fn)
+		os.Chmod(final_fn, 0666)
+
 	}
 
 }
